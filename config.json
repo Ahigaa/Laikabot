@@ -1,0 +1,11 @@
+{
+  "token": "toekn here",
+  "owners": [
+    userd goes here
+  ],
+  "join_message": "Fuck me",
+  "prefix": [
+    "."
+  ],
+  "playing": "INITIATE.SPACE"
+}
