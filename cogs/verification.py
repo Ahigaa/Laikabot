@@ -149,12 +149,30 @@ class verification(commands.Cog):
                     therole = discord.utils.get(ctx.guild.roles, name=f"{fuckk}") 
                     await ctx.author.add_roles(therole)
                     await ctx.message.add_reaction(chr(0x2705))
+
+                    for role in ctx.guild.roles:
+                        if len(role.members) == 0:
+                            channel = self.bot.get_channel(660985458049941524)
+                            embed = discord.Embed(color=0x21d3f3)
+                            embed.description = f"Automatically deleted the role **{role}** !"
+                            await channel.send(embed=embed)
+                            await role.delete()
+
                 except Exception as e:
                     await guild.create_role(name=r['hex'], colour=discord.Colour(r["int"]))
                     fuckk = r['hex']
                     therole = discord.utils.get(ctx.guild.roles, name=f"{fuckk}") 
                     await ctx.author.add_roles(therole)
                     await ctx.message.add_reaction(chr(0x2705))
+
+                    for role in ctx.guild.roles:
+                        if len(role.members) == 0:
+                            channel = self.bot.get_channel(660985458049941524)
+                            embed = discord.Embed(color=0x21d3f3)
+                            embed.description = f"Automatically deleted the role **{role}** !"
+                            await channel.send(embed=embed)
+                            await role.delete()
+
             except Exception as e:
                 await ctx.send(e)
 
