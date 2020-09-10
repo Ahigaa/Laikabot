@@ -4,6 +4,7 @@ import psutil
 import os
 import aiohttp
 import random
+import re
 
 from discord.ext import commands
 from discord.ext.commands import errors
@@ -32,6 +33,27 @@ class SpamFilter(commands.Cog):
         else:
             self.bot.loop.create_task(antispam.addSpamCounter(user = message.author, bott = self.bot))
             self.bot.loop.create_task(antispam.reduceSpamCounter(user = message.author, bott = self.bot))
+
+        f = message.content
+        n = 30
+        word_len = []
+        shit = ['<', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+        if len(message.content) >= 500:
+            await message.delete();
+
+        txt = f.split(" ")
+        for x in txt:
+            if re.compile('|'.join(shit),re.IGNORECASE).search(message.content):
+                return
+            else:
+                if len(x) > n:
+                    if "https:" in message.content:
+                        return
+                    else:
+                        word_len.append(x)
+                        await message.delete();
+
 
 
 
