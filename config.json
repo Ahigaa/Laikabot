@@ -1,7 +1,10 @@
 {
-  "token": "toekn here",
+  "token": "token here",
   "owners": [
-    userd goes here
+    owner id here
+  ],
+  "blacklist": [
+    751476068371791923 #blacklist a userid, in this case, Laika
   ],
   "join_message": "Fuck me",
   "prefix": [
