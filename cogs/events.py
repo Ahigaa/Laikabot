@@ -25,11 +25,30 @@ async def send_cmd_help(ctx):
         await ctx.send_help(str(ctx.command))
 
 
+async def send_cmd_help(ctx):
+    if ctx.invoked_subcommand:
+        await ctx.send_help(str(ctx.invoked_subcommand))
+    else:
+        await ctx.send_help(str(ctx.command))
+
+class Blacklisted(commands.CheckFailure): pass
+
 class Events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.config = default.get("config.json")
         self.process = psutil.Process(os.getpid())
+
+    def bot_check_once(self, ctx):
+        blacklist = default.get("config.json").blacklist
+        if ctx.author.id in blacklist:
+            raise Blacklisted()
+        else:
+            return True
+
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, Blacklisted):
+            await ctx.send("You cannot use this command.")
 
     @commands.Cog.listener()
     @commands.guild_only()
