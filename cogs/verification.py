@@ -35,7 +35,7 @@ class verification(commands.Cog):
         self.db = sqlite3.connect(db_path)
         self.db_cursor = self.db.cursor()
 
-        self.db_cursor.execute("SELECT * FROM user WHERE irid=?", (fuckingid,))
+        self.db_cursor.execute("SELECT * FROM user WHERE active=1 AND irid=?", (fuckingid,))
         ID = fuckingid
         guild = ctx.guild
         channel = self.bot.get_channel(set channel id here)
@@ -126,14 +126,10 @@ class verification(commands.Cog):
 
             if not re.search(r'^(?:[0-9a-fA-F]{3}){1,2}$', color):
                 return await ctx.send("You're only allowed to enter HEX (0-9 & A-F)")
-            try:
-                r = await http.get(f"https://api.alexflipnote.dev/colour/{color}", res_method="json", no_cache=True)
-            except aiohttp.ClientConnectorError:
-                return await ctx.send("The API seems to be down...")
-            except aiohttp.ContentTypeError:
-                return await ctx.send("The API returned an error or didn't return JSON...")
-
+            cleaned = color.replace("#", "")
+            myunendinghate = int(cleaned, 16)
             guild = ctx.guild
+            fuckk = str(color)
             try:
                 try:
                     rolel = []
@@ -145,33 +141,16 @@ class verification(commands.Cog):
                 except:
                     pass
                 try:
-                    fuckk = r['hex']
+                    fuckk = f(color)
                     therole = discord.utils.get(ctx.guild.roles, name=f"{fuckk}") 
                     await ctx.author.add_roles(therole)
                     await ctx.message.add_reaction(chr(0x2705))
-
-                    for role in ctx.guild.roles:
-                        if len(role.members) == 0:
-                            channel = self.bot.get_channel(660985458049941524)
-                            embed = discord.Embed(color=0x21d3f3)
-                            embed.description = f"Automatically deleted the role **{role}** !"
-                            await channel.send(embed=embed)
-                            await role.delete()
 
                 except Exception as e:
-                    await guild.create_role(name=r['hex'], colour=discord.Colour(r["int"]))
-                    fuckk = r['hex']
+                    await guild.create_role(name=fuckk, colour=discord.Colour(myunendinghate))
                     therole = discord.utils.get(ctx.guild.roles, name=f"{fuckk}") 
                     await ctx.author.add_roles(therole)
                     await ctx.message.add_reaction(chr(0x2705))
-
-                    for role in ctx.guild.roles:
-                        if len(role.members) == 0:
-                            channel = self.bot.get_channel(660985458049941524)
-                            embed = discord.Embed(color=0x21d3f3)
-                            embed.description = f"Automatically deleted the role **{role}** !"
-                            await channel.send(embed=embed)
-                            await role.delete()
 
             except Exception as e:
                 await ctx.send(e)
