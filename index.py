@@ -9,6 +9,7 @@ from utils.data import Bot, HelpFormat
 from datetime import datetime
 
 client = discord.Client()
+intents = discord.Intents.all()
 
 config = default.get("config.json")
 description = """
@@ -21,6 +22,7 @@ bot = Bot(
     command_attrs=dict(hidden=True),
     help_command=HelpFormat(),
     message_list = {}
+    intents = intents
 )
 
 print("Purging fags...")
