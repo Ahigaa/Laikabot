@@ -65,7 +65,7 @@ class Condom(commands.Cog):
             print(result)
 
             async with aiohttp.ClientSession() as session:
-                webhook = Webhook.from_url('https://discordapp.com/api/webhooks/661116894249484289/1YhybxOsoR2HnBPvCtUsORrkRulgc8ENmVojDMYcLX5Ukg1yI4eaitfTmm2w5JNvHUtK', adapter=AsyncWebhookAdapter(session))
+                webhook = Webhook.from_url('https://discordapp.com/api/webhooks/...', adapter=AsyncWebhookAdapter(session))
                 username = message.author.display_name
                 pfp = message.author.avatar_url_as(size=1024)
                 await webhook.send(f'{result}', username=str(username), avatar_url=str(pfp))
@@ -143,52 +143,12 @@ class Condom(commands.Cog):
 
             a = message.content
             b = lists.censorship
-
-            if "chinese" in a:
-                pf = ProfanityFilter()
-                if pf.is_profane(f"{a}") == True:
-                    word1 = "chinese"
-                    word2 = "GLORIOUS CHINESE"
-                    a = a.replace(f"{word1}", f"{word2}")
-            if "china" in a:
-                pf = ProfanityFilter()
-                if pf.is_profane(f"{a}") == True:
-                    word1 = "china"
-                    word2 = "CHINA IS GLORIOUS RIDE DA TIGA I LOVE CHINA"
-                    a = a.replace(f"{word1}", f"{word2}")
-            if "black woman" in a:
-                answer = random.choice(lists.niggerresponse)
-                word1 = "black woman"
-                word2 = str(answer)
-                a = a.replace(f"{word1}", f"{word2}")
-            if "black people" in a:
-                answer = random.choice(lists.niggerresponse)
-                word1 = "black people"
-                word2 = str(answer)
-                a = a.replace(f"{word1}", f"{word2}")
-            if "black person" in a:
-                answer = random.choice(lists.niggerresponse)
-                word1 = "black person"
-                word2 = str(answer)
-                a = a.replace(f"{word1}", f"{word2}")
-            if "african" in a:
-                answer = random.choice(lists.niggerresponse)
-                word1 = "african"
-                word2 = str(answer)
-                a = a.replace(f"{word1}", f"{word2}")
-            if "blacks" in a:
-                if "blacksmith" in a:
-                    return
-                answer = random.choice(lists.niggerresponse)
-                word1 = "blacks"
-                word2 = str(answer) + "s"
-                a = a.replace(f"{word1}", f"{word2}")
-
+            
             for x,y in b.items():
                 a = a.replace(x, y)
 
             async with aiohttp.ClientSession() as session:
-                webhook = Webhook.from_url('https://discordapp.com/api/webhooks/661116894249484289/1YhybxOsoR2HnBPvCtUsORrkRulgc8ENmVojDMYcLX5Ukg1yI4eaitfTmm2w5JNvHUtK', adapter=AsyncWebhookAdapter(session))
+                webhook = Webhook.from_url('https://discordapp.com/api/webhooks/...', adapter=AsyncWebhookAdapter(session))
                 username = message.author.display_name
                 pfp = message.author.avatar_url_as(size=1024)
                 await message.delete()
