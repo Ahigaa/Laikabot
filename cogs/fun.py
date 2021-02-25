@@ -74,6 +74,91 @@ class Fun_Commands(commands.Cog):
 
         return x.attachments[0].url
 
+    async def __fuck_command(self, ctx, quote=None):
+        await ctx.trigger_typing()
+        if quote:
+            messagewdwdad = await ctx.send("Working... *VROOOM*")
+            await asyncio.sleep(1)
+            await messagewdwdad.delete()
+            try:
+                randmm = ["111","222","333","444","555", "666", "7", "8", "9"]
+                async def niggerfuck():
+                    listf = list(quote)
+                    random.shuffle(listf)
+                    joinf = ''.join(listf)
+                    await ctx.send(f"{ctx.author}: {joinf}")
+
+                async def kikee():
+                    await ctx.send(f"{ctx.author}: {random.choice(lists.fuck)}")
+
+                async def eifefdf():
+                    nigger = random.choice(lists.prompt) + random.choice(lists.responsen)
+                    print(f"{ctx.author}: {nigger}")
+                    await ctx.send(f"{ctx.author}: {nigger}")
+
+                async def lainSpeak():
+                    word = "Lain"
+                    measure1 = time.time()
+                    measure2 = time.time()
+                    count = 1
+                    await ctx.send(f"{ctx.author}: ")
+                    while count < 2:
+                        joinffed = ''.join(word)
+                        await ctx.send(f"{joinffed}")
+                        word = random.choice(lists.fuckcorpus)
+                        if measure2 - measure1 >= 2:
+                            measure1 = measure2
+                            measure2 = time.time()
+                            count += 1
+                        else:
+                            measure2 = time.time()
+                async def fuckcufhf():
+                    async with ctx.channel.typing():
+                        try:
+                            tranny = google_translator()  
+                            tr1 = tranny.translate(quote, lang_tgt='en')
+                            tr2 = tranny.translate(tr1, lang_src='en', lang_tgt='sp')
+                            tr3 = tranny.translate(tr2, lang_src='sp', lang_tgt='en')
+                            await ctx.send(f"{ctx.author}: {tr3}")
+                        except Exception as e:
+                            await ctx.send(f"{ctx.author}: Uh oh we got ratelimited by googleniggerniggerniggerniggerniggerniggerniggernigger(((")
+
+
+                answer = random.choice(randmm)
+                if "1" in answer:
+                    await kikee()
+                elif "2" in answer:
+                    await eifefdf()
+                elif "3" in answer:
+                    await niggerfuck()
+                else:
+                    await fuckcufhf()
+            except:
+                return
+
+        message = ctx.message
+
+        if len(message.attachments) > 0:
+            messagewdwdad = await ctx.send("Working... *VROOOM*")
+            await asyncio.sleep(1)
+            await messagewdwdad.delete()
+            return message.attachments[0].url
+
+        def check(m):
+            return m.channel == message.channel and m.author == message.author
+
+        try:
+            if not len(message.attachments) >= 1:
+                if not quote:
+                    ans = random.choice(lists.ping)
+                    before = time.monotonic()
+                    message = await ctx.send("Pong")
+                    ping = (time.monotonic() - before) * 1000
+                    await message.edit(content=f"Pinged {ans}   |   {int(ping)}ms")
+        except:
+            return
+
+    
     @commands.Cog.listener()
     @commands.guild_only()
     async def on_message_delete(self, message):
@@ -151,69 +236,6 @@ class Fun_Commands(commands.Cog):
             return
         await ctx.message.delete()
         await ctx.send(f"**Anonymous**  01/06/19(Sun)13:02:01 No.7340664 ► __>>7342278__ __>>7346156__ __>>7347231__\n\n      __>>7339455__\n      {quote}")
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.guild_only()
-    @commands.command()
-    async def fuck(self, ctx, *, quote: commands.clean_content):
-        """ Fuck my shit up babyeeyyy """
-        fuckmenigga = ctx.message.author
-        if discord.utils.get(fuckmenigga.roles, name="Hardmute") != None:
-            return
-
-        randmm = ["111","222","333","444","555", "666"]
-        
-        async def niggerfuck():
-            listf = list(quote)
-            random.shuffle(listf)
-            joinf = ''.join(listf)
-            await ctx.send(f"{ctx.author}: {joinf}")
-
-        async def kikee():
-            answerr = random.choice(lists.fuck)
-            await ctx.send(f"{ctx.author}: {answerr}")
-
-        async def eifefdf():
-            listff = random.choice(lists.prompt)
-            wdasdd = random.choice(lists.responsen)
-            nigger = listff + wdasdd
-            print(f"{ctx.author}: {nigger}")
-            await ctx.send(f"{ctx.author}: {nigger}")
-
-        async def urmomxd():
-            listfff = random.choice(lists.promptte)
-            wdasddd = random.choice(lists.responsenbc)
-            nigger = listfff + quote + wdasddd
-            print(f"{ctx.author}: {nigger}")
-            await ctx.send(f"{ctx.author}: {nigger}")
-
-        async def lainSpeak():
-            word = "Lain"
-            measure1 = time.time()
-            measure2 = time.time()
-            count = 1
-            await ctx.send(f"{ctx.author}: ")
-            while count < 2:
-                joinffed = ''.join(word)
-                await ctx.send(f"{joinffed}")
-                word = random.choice(lists.fuckcorpus)
-                if measure2 - measure1 >= 2:
-                    measure1 = measure2
-                    measure2 = time.time()
-                    count += 1
-                else:
-                    measure2 = time.time()
-
-
-        answer = random.choice(randmm)
-        if "1" in answer or "2" in answer:
-            await kikee()
-        elif "3" in answer:
-            await eifefdf()
-        elif "4" in answer or "5" in answer:
-            await urmomxd()
-        else:
-            await niggerfuck()
 
     @commands.cooldown(1, 60, commands.BucketType.user)
     @commands.guild_only()
