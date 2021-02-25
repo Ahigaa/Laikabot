@@ -1,3 +1,12 @@
+censorship = {
+  'mhm': 'romet is a x-dressing faggot kil myself', 'faith': 'fatih',
+  'excluded': 'excludedfag', 'indica': 'ethot', 'pozu': 'kike', 'tealeaf': '3 FREE STONKS', 'alex jones': 'fat james mason',
+  'boomer': 'hoomer', 'jesus christ': 'dead kike on a spike', 'jesus': 'jewsus', 'vocaloid': 'mongoloid', 'tranny cock': 'faggot',
+  'shota': 'faggot', 'sissy': 'faggot', 'brap': 'toot', 'nya': 'catfucker', 'femboy': 'femsnot', 'femboi': 'femsnot', 'boypussy': 'onajole',
+  'boipussy': 'onajole', 'boy pussy': 'onajole', 'boi pussy': 'onajole', 'systemspace': 'systemgay', 'deal': 'chungus', 'chink': 'glorious chinese',
+  'thanks giving': 'indigenous peoples day', 'thanksgiving': 'indigenous peoples day', 'columbus day': 'indigenous peoples day', 'trump': 'orange kike', 'serb': 's*rb', 'twink': 'faggot'
+}
+
 ballresponse = [
   'Yes', 'No', 'Take a wild guess...', 'Very doubtful',
   'Sure', 'Without a doubt', 'Most likely', 'Might be possible',
