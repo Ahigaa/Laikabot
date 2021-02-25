@@ -96,6 +96,40 @@ class verification(commands.Cog):
                     return await channel.send(f"{after.mention} Change your color by doing .color [hexcode]")
                 except Exception as e:
                     await channel.send(f"{e}")
+                    
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        #Capcodes/statuses
+        if message.author.bot:
+            return
+        DB_NAME = "database name goes here"
+        db_path = os.path.abspath("database path goes here" + DB_NAME + ".db")
+        self.db = sqlite3.connect(db_path)
+        member = str(message.author)
+        nickname = str(message.author.nick)
+        if "##" in nickname:
+            return
+        else:
+            
+            self.db_cursor = self.db.cursor()
+            self.db_cursor.execute("SELECT * FROM user WHERE discord='" + member + "'")
+            user = self.db_cursor.fetchone()
+            if user:
+                try:
+                    status = user[11]
+                    newnick = f"{nickname} ## {status}"
+                    if not status:
+                        return
+                    elif "None" in nickname:
+                        nickname = str(message.author.display_name)
+                        newnick = f"{nickname} ## {status}"
+                        await message.author.edit(nick=f"{newnick}")
+                    else:
+                        await message.author.edit(nick=f"{newnick}")
+                    self.db.close()
+                    self.db_cursor.close()
+                except Exception as e:
+                    print(e)
 
 
     @commands.command()
