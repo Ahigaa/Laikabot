@@ -223,7 +223,31 @@ class Activity(commands.Cog):
 				self.db_cursor.close()
 				self.db.close()
 
-
+	@commands.Cog.listener()
+	async def on_voice_state_update(self, member, before, after):
+		if before.channel == after.channel:
+			return
+		#Just for fun
+		nickname = str(member.nick)
+		if before.channel is None and after.channel is not None:
+			# JOIN
+			print(f'join')
+			if "None" in nickname:
+				nickname = str(member.display_name)
+			elif "🎵" in nickname:
+				return
+			newnick = f"{nickname} 🎵"
+			print(f'{nickname} | {newnick} setting fuck nigger')
+			await member.edit(nick=f"{newnick}")
+		elif before.channel is not  None and after.channel is None:
+			# LEAVE
+			print(f'leave')
+			s = nickname.replace('🎵', '')
+			newnick = f"{s}"
+			print(f'{nickname} | {newnick} setting fuck nigger')
+			await member.edit(nick=f"{newnick}")
+		else:
+			return
 
 	@commands.cooldown(1, 3, commands.BucketType.user)
 	@commands.command()
