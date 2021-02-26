@@ -78,8 +78,10 @@ class Condom(commands.Cog):
             return
 
         if message.content == 'f':
-            hearts = ['❤', '💛', '💚', '💙', '💜']
-            await message.channel.send(f"**{message.author.name}** has paid their respect {random.choice(hearts)}")
+            await message.channel.send(f"**{message.author.name}** has paid their respect {random.choice(['❤', '💛', '💚', '💙', '💜'])}")
+
+        elif message.content.startswith('f '):
+            await message.channel.send(f"**{message.author.name}** has paid their respect {f"for **{message.content.partition("f ")[2]}** "}{random.choice(['❤', '💛', '💚', '💙', '💜'])}")
 
         if channelid != "degeneral":
             return
