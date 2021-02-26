@@ -237,6 +237,24 @@ class Fun_Commands(commands.Cog):
         await ctx.message.delete()
         await ctx.send(f"**Anonymous**  01/06/19(Sun)13:02:01 No.7340664 ► __>>7342278__ __>>7346156__ __>>7347231__\n\n      __>>7339455__\n      {quote}")
 
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.guild_only()
+    @commands.command(aliases=['f'])
+    async def fuck(self, ctx, *, quote: commands.clean_content = None):
+        """ you """
+        fuckmenigga = ctx.message.author
+        if discord.utils.get(fuckmenigga.roles, name="Hardmute") != None:
+            return
+        async with ctx.channel.typing():
+            img = await self.__fuck_command(ctx, quote)
+            if not isinstance(img, str):
+                return img
+
+            async with self.session.get("https://nekobot.xyz/api/imagegen?type=magik&image=%s" % img) as r:
+                res = await r.json()
+
+            await ctx.send(embed=self.__embed_json(res))
+        
     @commands.cooldown(1, 60, commands.BucketType.user)
     @commands.guild_only()
     @commands.command()
@@ -355,23 +373,6 @@ class Fun_Commands(commands.Cog):
             if not isinstance(img, str):
                 return img
             async with self.session.get("https://nekobot.xyz/api/imagegen?type=bodypillow&url=%s" % img) as r:
-                res = await r.json()
-
-            await ctx.send(embed=self.__embed_json(res))
-
-    @commands.command()
-    @commands.cooldown(1, 5, commands.BucketType.user)
-    async def magik(self, ctx, user: discord.Member = None):
-        """MADUKE MAGEC"""
-        fuckmenigga = ctx.message.author
-        if discord.utils.get(fuckmenigga.roles, name="Hardmute") != None:
-            return
-        async with ctx.channel.typing():
-            img = await self.__get_image(ctx, user)
-            if not isinstance(img, str):
-                return img
-
-            async with self.session.get("https://nekobot.xyz/api/imagegen?type=magik&image=%s" % img) as r:
                 res = await r.json()
 
             await ctx.send(embed=self.__embed_json(res))
@@ -663,19 +664,6 @@ class Fun_Commands(commands.Cog):
 
         if not permissions.can_upload(ctx):
             return await ctx.send("I cannot send images here ;>;")
-
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.guild_only()
-    @commands.command()
-    async def f(self, ctx, *, text: commands.clean_content = None):
-        """ Press F to pay respect """
-        fuckmenigga = ctx.message.author
-        if discord.utils.get(fuckmenigga.roles, name="Hardmute") != None:
-            return
-        hearts = ['❤', '💛', '💚', '💙', '💜']
-        reason = f"for **{text}** " if text else ""
-        await ctx.send(f"**{ctx.author.name}** has paid their respect {reason}{random.choice(hearts)}")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.guild_only()
