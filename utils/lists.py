@@ -1,3 +1,47 @@
+fortune = [
+"""```yaml
+Your fortune: Very Bad Luck
+```""",
+"""```md
+#Your fortune: Better not tell you now
+```""",
+"""```bash
+'Your fortune: Bad Luck'
+```""",
+"""```yaml
+Your fortune: （　´_ゝ`）ﾌｰﾝ
+```""",
+"""```yaml
+Your fortune: ｷﾀ━━━━━━(ﾟ∀ﾟ)━━━━━━ !!!!
+```""",
+"""```diff
+-Your fortune: Reply hazy, try again
+```""",
+"""```diff
+-Your fortune: Excellent Luck
+```""",
+"""```fix
+Your fortune: Good Luck
+```""",
+"""```yaml
+Your fortune: Good news will come to you by mail
+```""",
+"""```md
+#Your fortune: You will meet a dark handsome stranger
+```""",
+"""`
+Your fortune: Very Bad Luck
+`""",
+"""```fix
+Your fortune: Average Luck
+```""",
+"""```fix
+Your fortune: Godly Luck
+```""",
+"""```md
+#Your fortune: Outlook good
+```"""]
+
 censorship = {
   'mhm': 'romet is a x-dressing faggot kil myself', 'faith': 'fatih',
   'excluded': 'excludedfag', 'indica': 'ethot', 'pozu': 'kike', 'tealeaf': '3 FREE STONKS', 'alex jones': 'fat james mason',
