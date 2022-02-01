@@ -779,6 +779,55 @@ class Fun_Commands(commands.Cog):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.guild_only()
     @commands.command()
+    async def fortune(self, ctx, *, quote: commands.clean_content = None):
+        """ fortune | [image] """
+        fuckmenigga = ctx.message.author
+        if discord.utils.get(fuckmenigga.roles, name="Hardmute") != None:
+            return
+        async with ctx.channel.typing():
+            username = ctx.message.author.display_name
+            pfp = ctx.message.author.avatar_url_as(size=1024)
+            file = discord.File("cogs/temp/img.jpg", filename="image.jpg")
+            uri = f'webhookurlhere'
+            isImage=False
+            fortune = f"{random.choice(lists.fortune)}"
+            if ctx.message.attachments:
+                isImage=True
+                image_types = ['jpg','png','jpeg', 'gif']
+                for attachment in ctx.message.attachments:
+                    if any(attachment.filename.lower().endswith(image) for image in image_types):
+                        await attachment.save("cogs/temp/img.jpg")
+                        channel = self.bot.get_channel(channelidhere)
+                        await channel.send(f'image saved')
+            else:
+                isImage=False
+            if quote:
+                await(await ctx.send("Working... *VROOOM*")).delete(delay=1)
+                if isImage:
+                    async with aiohttp.ClientSession() as session:
+                        webhook = Webhook.from_url(uri, adapter=AsyncWebhookAdapter(session))
+                        await webhook.send(f'{quote}\n\n{fortune}', file=file, username=str(username), avatar_url=str(pfp))
+                        await ctx.message.delete()
+                else:
+                    async with aiohttp.ClientSession() as session:
+                        webhook = Webhook.from_url(uri, adapter=AsyncWebhookAdapter(session))
+                        await webhook.send(f'{quote}\n\n{fortune}', username=str(username), avatar_url=str(pfp))
+                        await ctx.message.delete()
+            else:
+                if isImage:
+                    async with aiohttp.ClientSession() as session:
+                        webhook = Webhook.from_url(uri, adapter=AsyncWebhookAdapter(session))
+                        await webhook.send(f'\n\n{fortune}', file=file, username=str(username), avatar_url=str(pfp))
+                        await ctx.message.delete()
+                else:
+                    async with aiohttp.ClientSession() as session:
+                        webhook = Webhook.from_url(uri, adapter=AsyncWebhookAdapter(session))
+                        await webhook.send(f'\n\n{fortune}', username=str(username), avatar_url=str(pfp))
+                        await ctx.message.delete()
+            
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.guild_only()
+    @commands.command()
     async def rate(self, ctx, *, thing: commands.clean_content):
         """ Rates whatever """
         fuckmenigga = ctx.message.author
