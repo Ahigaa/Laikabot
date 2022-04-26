@@ -10,5 +10,7 @@
   "prefix": [
     "."
   ],
-  "playing": "INITIATE.SPACE"
+  "playing": "INITIATE.SPACE",
+  "database1": "path goes here",
+  "database2": "second path goes here,
 }
