@@ -26,9 +26,6 @@ class Corona(commands.Cog):
     @commands.command()
     async def corona(self, ctx, location : str ):
         """ <All>"""
-        fuckmenigga = ctx.message.author
-        if discord.utils.get(fuckmenigga.roles, name="Muted") != None:
-            return
             
         if len(location) == 2:
             location = location.upper()
