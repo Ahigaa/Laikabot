@@ -17,12 +17,11 @@ from bs4 import BeautifulSoup
 from asyncio import sleep
 from utils import lists, permissions, http, default
 from discord import Webhook, AsyncWebhookAdapter
+from discord.ext.commands import check, CheckFailure
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
 
-async def send_cmd_help(ctx):
-    if ctx.invoked_subcommand:
-        await ctx.send_help(str(ctx.invoked_subcommand))
-    else:
-        await ctx.send_help(str(ctx.command))
+from db import db
 
 
 async def send_cmd_help(ctx):
@@ -60,6 +59,9 @@ class Events(commands.Cog):
         except AttributeError:
             print(f"Private message > {ctx.author} > {ctx.message.clean_content}")
 
+    async def rules_reminder(self):
+        await self.stdout.send("cock!")
+
     @commands.Cog.listener()
     @commands.guild_only()
     async def on_ready(self):
@@ -69,22 +71,16 @@ class Events(commands.Cog):
         print(f'Ready: {self.bot.user} | Servers: {len(self.bot.guilds)} | Members: {len(set(self.bot.get_all_members()))}')
         await self.bot.change_presence(activity=discord.Activity(name=f'{self.config.playing}', type=discord.ActivityType.streaming, url='https://www.twitch.tv/search?term=fucking%20go%20to%20https%3A%2F%2Finitiate.space%2F%20faggot'))
 
-    @commands.Cog.listener()
-    @commands.guild_only()
-    async def on_member_join(self, member):
-        try:
-            channel = self.bot.get_user(member.id)
-            embed = discord.Embed(color=0x21d3f3)
-            embed.description = f"RULES:\n\n» 0.   Love Lain.\n» 1.   Respect the channel topic. Erotic content goes in #⁄h⁄.\n» 2.   Lolicon, shotacon, child pornography, scatological pornography, and guro are not permitted on INITIATE.\n» 3.   Respect the Discord Terms of Service at all times.n» 4.   Do not cause harm to INITIATE or any of it's close affiliates or one of the members of it's community be it through Doxxing, Hacking, Account Hijacking or any other applicable reasons.\n» 5.   Lewding Lain is ban and considered the greatest sin.\n» 6.   Please do not bring systemspace drama here! We would like everyone to have a new beginning!\n» 7.   Please keep shitposting to a minimum in #degeneral ! excessive shitposting goes in #indica \n» 8.   Keep your trannyposting in DMs! Talking like a fucking queer is just fine, just no pics.\n» 9.   Non of that animal roleplay/cosplay or whatever the fuck furries do.\n» 10. For the love of god don't fucking beg for mod you hypercuck!\n» 11. No thots and remember to violate human rights!\n» 12. Use common sense when posting. If you think something is not alright to post in for example #degeneral then it most likely isn't.\n» 13. Please read https://initiate.space/omniverse/ while you're at it! (optional)"
-            await channel.send(embed=embed)
-        except Exception as e:
-            return
+        server = self.bot.get_guild(857815169916993606)
+        channel = self.bot.get_channel(857815170213871618)
+
+        await channel.send(f'Ready: {self.bot.user} | Servers: {len(self.bot.guilds)} | Members: {len(set(self.bot.get_all_members()))}')
 
     @commands.Cog.listener()
     @commands.guild_only()
-    async def on_message(self, message):
-        if ".irid" in message.content or ". irid" in message.content:
-            await message.delete()
+    async def on_member_join(self, member):
+        if "lain" in member.name:
+            await member.edit(nick="faggot")
 
     @commands.Cog.listener()
     @commands.guild_only()
