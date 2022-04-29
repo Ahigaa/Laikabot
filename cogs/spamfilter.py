@@ -39,6 +39,12 @@ class SpamFilter(commands.Cog):
         word_len = []
         shit = ['<', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
+        if "@everyone" in message.content or "@here" in message.content:
+            if message.author.id in self.config.owners:
+                return
+            else:
+                await message.delete();
+
         if len(message.content) >= 500:
             await message.delete();
 
