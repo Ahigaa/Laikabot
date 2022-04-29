@@ -9,6 +9,7 @@ class Encryption(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+
     @commands.group()
     async def encode(self, ctx):
         """ All encode methods """
@@ -22,9 +23,6 @@ class Encryption(commands.Cog):
             await ctx.send_help(str(ctx.command))
 
     async def encryptout(self, ctx, convert, input):
-        fuckmenigga = ctx.message.author
-        if discord.utils.get(fuckmenigga.roles, name="Muted") != None:
-            return
         if len(input) > 1900:
             # TODO: Upload if too long and accept text files
             return await ctx.send(f"The result was too long, sorry **{ctx.author.name}**")
