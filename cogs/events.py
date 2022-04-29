@@ -71,8 +71,8 @@ class Events(commands.Cog):
         print(f'Ready: {self.bot.user} | Servers: {len(self.bot.guilds)} | Members: {len(set(self.bot.get_all_members()))}')
         await self.bot.change_presence(activity=discord.Activity(name=f'{self.config.playing}', type=discord.ActivityType.streaming, url='https://www.twitch.tv/search?term=fucking%20go%20to%20https%3A%2F%2Finitiate.space%2F%20faggot'))
 
-        server = self.bot.get_guild(857815169916993606)
-        channel = self.bot.get_channel(857815170213871618)
+        server = self.bot.get_guild(whatever)
+        channel = self.bot.get_channel(whatever)
 
         await channel.send(f'Ready: {self.bot.user} | Servers: {len(self.bot.guilds)} | Members: {len(set(self.bot.get_all_members()))}')
 
