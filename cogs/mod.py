@@ -5,10 +5,12 @@ import datetime
 import time
 import json
 import urllib.request
+import sqlite3
+import os
 
 from discord.ext import commands
 from discord.ext.commands import errors
-from utils import permissions, default
+from utils import permissions, default, repo
 from asyncio import sleep
 
 
@@ -71,10 +73,18 @@ class Moderator(commands.Cog):
     @permissions.has_permissions(kick_members=True)
     async def kick(self, ctx, member: discord.Member, *, reason: str = None):
         """ Kicks a user from the current server. """
+        if member.id in self.config.owners:
+            return
         try:
             if reason == "-f":
                 await member.kick(reason=default.responsible(ctx.author, reason))
                 await ctx.send(default.actionmessage("kicked"))
+                try:
+                    image = str("https://cdn.discordapp.com/attachments/660982562331820032/751781435777744916/GAYZONE.mp4")
+                    userr = user
+                    await userr.send(f"{image}")
+                except Exception as e:
+                    return
             else:
                 role_names = [role.name for role in member.roles]
                 role_names = role_names[1:]
@@ -82,9 +92,26 @@ class Moderator(commands.Cog):
                     fuck = discord.utils.get(ctx.guild.roles, name=f"{role}")
                     #await ctx.send(f"{fuck}")
                     await member.remove_roles(fuck)
-                await ctx.send(default.actionmessage("kicked"))
+                embed = discord.Embed(color=0x1f7eb8)
+                embed.description=(default.actionmessage("kicked"))
+                await ctx.send(embed=embed)
         except Exception as e:
             await ctx.send(e)
+
+    @commands.command(hidden=True)
+    async def getuserid(self, ctx, *, userid: int):
+        """Get user from id"""
+        try:
+            user = await self.bot.fetch_user(userid)
+            created_at = user.created_at.strftime("%d %b %Y %H:%M")
+
+            em = discord.Embed(color=0xDEADBF)
+            em.set_author(name=str(user), icon_url=user.avatar_url)
+            em.add_field(name="Bot?", value=str(user.bot))
+            em.add_field(name="Created At", value=str(created_at))
+            await ctx.send(embed=em)
+        except:
+            await ctx.send("Failed to find user.")
 
     @commands.command(aliases=["nick"])
     @commands.guild_only()
@@ -100,28 +127,34 @@ class Moderator(commands.Cog):
         except Exception as e:
             await ctx.send(e)
 
+
     @commands.command()
     @commands.guild_only()
     @permissions.has_permissions(ban_members=True)
     async def ban(self, ctx, user: discord.Member, *, reason="None"):
         """ Bans a user from the current server. """
+        if user.id in self.config.owners:
+            return
         guildname = 'INITIATE'
         userthing = str(user.name)
         userreason = str(reason)
-        await user.ban(reason=reason)
-        embed = discord.Embed(color=0x1f7eb8)
-        embed.description=(f'⌫ {userthing} banned, reason: {userreason}')
-        await ctx.send(embed=embed)
+        userr = user
+        image = str("https://cdn.discordapp.com/attachments/673308690157404211/744390925043892305/bannedxd.png")
         try:
-        	#Please not that this was used with the old database
-            self.connect()
-            self.cursor.execute("INSERT INTO `discord_ban` (`username`, `userID`, `guild`, `reason`) VALUES ('" + str(user.name) + "', '" + str(user.id) + "', '" + str(guildname) + "', '" + str(reason) + "')")
-            self.connection.commit()
-            self.disconnect()
-        except Exception as e:
+            if reason == "-f":
+                await user.ban(reason=reason)
+            role_names = [role.name for role in user.roles]
+            role_names = role_names[1:]
+            for role in role_names:
+                fuck = discord.utils.get(ctx.guild.roles, name=f"{role}")
+                await user.remove_roles(fuck)
             embed = discord.Embed(color=0x1f7eb8)
-            embed.description=(f'Could not insert into table!\nUser might already be in table. Please use .unban <id> to unban.')
+            embed.description=(f'⌫ {userthing} banned, reason: {userreason}')
             await ctx.send(embed=embed)
+            await userr.send(f"{image}\nDue to recent behaviour you've been banned\nfrom the official INITIATE server.\nYou may appeal this ban by DMing Ahiga.\nSorry for the inconvenience.\n\nBan reason: {userreason}")
+        except Exception as e:
+            await ctx.send(f"{e}")
+        return self.db.close()
 
     @commands.command(hidden=True)
     @commands.guild_only()
@@ -138,6 +171,8 @@ class Moderator(commands.Cog):
     @permissions.has_permissions(ban_members=True)
     async def hackban(self, ctx, user_id: int):
         """Bans a user outside of the server."""
+        if user_id in self.config.owners:
+            return
         author = ctx.message.author
         guild = author.guild
         banmessage = "Banned by hackban"
@@ -146,29 +181,11 @@ class Moderator(commands.Cog):
         if user is not None:
             return await ctx.invoke(self.ban, user=user)
 
-        try:
-        	#Please not that this was used with the old database
-            self.connect()
-            await self.bot.http.ban(user_id, guild.id, 0)
-            self.cursor.execute("INSERT INTO `discord_ban` (`username`, `userID`, `guild`, `reason`) VALUES ('" + str(banmessage) + "', '" + str(user_id) + "', '" + str(guild) + "', '" + str(banmessage) + "')")
-            self.connection.commit()
-            embed = discord.Embed(color=0x1f7eb8,
-                              title=f"**__Banned__**")
-            embed.description=(f'⌫ Banned user: %s' % user_id)
-            await ctx.send(embed=embed)
-            self.disconnect()
-
-        except discord.NotFound:
-            embed = discord.Embed(color=7091547,
-                              title=f"**__Error__**")
-            embed.description='❌ Could not find user.\nInvalid user ID was provided.'
-            await ctx.send(embed=embed)
-
-        except discord.errors.Forbidden:
-            embed = discord.Embed(color=7091547,
-                              title=f"**__Error__**")
-            embed.description='❌ Could not ban user. Not enough permissions.'
-            await ctx.send(embed=embed)
+        await self.bot.http.ban(user_id, guild.id, 0)
+        embed = discord.Embed(color=0x1f7eb8, title=f"**__Banned__**")
+        embed.description=(f'⌫ Banned user: %s' % user_id)
+        await ctx.send(embed=embed)
+        
 
 
     @commands.command()
@@ -186,30 +203,11 @@ class Moderator(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    @permissions.has_permissions(ban_members=True)
-    async def unban(self, ctx, member: MemberID, *, reason: str = None):
-        """ Unbans a user from the current server. """
-        try:
-        	#Please not that this was used with the old database
-            self.connect()
-            self.query_userID()
-            usridthing = str(member)
-            if usridthing in self.existing_users:
-                query = self.cursor.execute("DELETE FROM `discord_ban` WHERE `userID`='" + str(member) + "'")
-                self.connection.commit()
-                self.disconnect()
-            else:
-                return()
-            await ctx.guild.unban(discord.Object(id=member), reason=default.responsible(ctx.author, reason))
-            await ctx.send(default.actionmessage("unbanned"))
-        except Exception as e:
-            await ctx.send(e)
-
-    @commands.command()
-    @commands.guild_only()
     @permissions.has_permissions(manage_roles=True)
     async def mute(self, ctx, member: discord.Member, *, reason: str = None):
         """ Mutes a user from the current server. """
+        if member.id in self.config.owners:
+            return
         message = []
         for role in ctx.guild.roles:
             if role.name == "Hardmute":
@@ -220,19 +218,83 @@ class Moderator(commands.Cog):
             return await ctx.send("Are you sure you've made a role called **Hardmute**? Remember that it's case sensetive too...")
 
         try:
-            await member.add_roles(therole, reason=default.responsible(ctx.author, reason))
-            await ctx.send(default.actionmessage("muted"))
+            if member.id == 759621355708350484:
+                return await ctx.send("fuck u")
+            else:
+                await member.add_roles(therole, reason=default.responsible(ctx.author, reason))
+                await ctx.send(default.actionmessage("muted"))
         except Exception as e:
             await ctx.send(e)
 
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        fuckmenigga = message.author
-        #role = discord.utils.find(lambda r: r.name == 'Muted', user.guild.roles)
-        if discord.utils.get(fuckmenigga.roles, name="Hardmute") != None:
-            await message.delete();
+    @commands.guild_only()
+    @commands.check(repo.is_owner)
+    @commands.command(hidden=True)
+    async def mod(self, ctx, member: discord.Member = None):
+        """ . """
+        if not member:
+            member = ctx.author
         else:
-            await message.delete();
+            member = member
+
+        message = []
+        for role in ctx.guild.roles:
+            if role.name == "Heimdallr":
+                message.append(role.id)
+        try:
+            therole = discord.Object(id=message[0])
+        except IndexError:
+            return await ctx.send("Are you sure you've made a role called **Heimdallr**? Remember that it's case sensetive too...")
+
+        try:
+            await member.add_roles(therole)
+        except Exception as e:
+            await ctx.send(e)
+
+    @commands.command(hidden=True, aliases=['demod'])
+    @commands.guild_only()
+    @commands.check(repo.is_owner)
+    async def unmod(self, ctx, member: discord.Member = None):
+        """ .."""
+        if not member:
+            member = ctx.author
+        else:
+            member = member
+
+        message = []
+        for role in ctx.guild.roles:
+            if role.name == "Heimdallr":
+                message.append(role.id)
+        try:
+            therole = discord.Object(id=message[0])
+        except IndexError:
+            return await ctx.send("Are you sure you've made a role called **Heimdallr**? Remember that it's case sensetive too...")
+
+        try:
+            await member.remove_roles(therole)
+        except Exception as e:
+            await ctx.send(e)
+
+    @commands.command()
+    @commands.guild_only()
+    @permissions.has_permissions(manage_roles=True)
+    async def let(self, ctx, member: discord.Member):
+        """ Lets a user from the current server. """
+        message = []
+        for role in ctx.guild.roles:
+            if role.name == "-online-":
+                message.append(role.id)
+        try:
+            therole = discord.Object(id=message[0])
+        except IndexError:
+            return await ctx.send("Are you sure you've made a role called **-online-**? Remember that it's case sensetive too...")
+
+        try:
+            if member.id == 759621355708350484:
+                return await ctx.send("fuck u")
+            else:
+                await member.add_roles(therole)
+        except Exception as e:
+            await ctx.send(e)
 
     @commands.command()
     @commands.guild_only()
@@ -300,6 +362,8 @@ class Moderator(commands.Cog):
     async def prurge(self, ctx, user: discord.Member, *, matches: str = None, limit: int = 100):
         """Purge all messages, optionally from ``user``
         or contains ``matches``."""
+        if user.id == 599414310502006873:
+            return
         def check_msg(msg):
             if msg.id == ctx.message.id:
                 return True
@@ -428,28 +492,6 @@ class Moderator(commands.Cog):
                 await message.clear_reactions()
 
         await ctx.send(f'Successfully removed {total_reactions} reactions.')
-
-
-    @commands.group()
-    @commands.guild_only()
-    async def listservers(self, ctx):
-        """ Lists servers and doxxes uir shiT. """
-        servers = list(self.bot.guilds)
-        await ctx.send("Count: " + str(len(self.bot.guilds)) + " servers:")
-        async for guild in self.bot.fetch_guilds(limit=150):
-            await ctx.send(guild.name)
-            await ctx.send(guild.id)
-
-    @commands.group()
-    @commands.guild_only()
-    async def listschannels(self, ctx):
-        """ Lists servers and doxxes uir shiT. """
-        servers = list(self.bot.guilds)
-        await ctx.send("Count: " + str(len(self.bot.guilds)) + " servers:")
-        async for guild in self.bot.fetch_guilds(limit=150):
-            await ctx.send(guild.name)
-            await ctx.send(guild.id)
-
 
     @commands.group()
     @commands.guild_only()
