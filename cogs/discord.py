@@ -1,4 +1,7 @@
 import discord
+import re
+import aiohttp
+import base64
 
 from io import BytesIO
 from utils import default
@@ -16,9 +19,6 @@ class Discord_Info(commands.Cog):
     @commands.guild_only()
     async def avatar(self, ctx, *, user: discord.Member = None):
         """ Get the avatar of you or someone else """
-        fuckmenigga = ctx.message.author
-        if discord.utils.get(fuckmenigga.roles, name="Muted") != None:
-            return
         if user is None:
             user = ctx.author
 
@@ -29,9 +29,6 @@ class Discord_Info(commands.Cog):
     @commands.guild_only()
     async def roles(self, ctx):
         """ Get all roles in current server """
-        fuckmenigga = ctx.message.author
-        if discord.utils.get(fuckmenigga.roles, name="Muted") != None:
-            return
         allroles = ""
 
         for num, role in enumerate(sorted(ctx.guild.roles, reverse=True), start=1):
@@ -45,9 +42,6 @@ class Discord_Info(commands.Cog):
     @commands.guild_only()
     async def joindate(self, ctx, *, user: discord.Member = None):
         """ Check when a nigger joined the current server """
-        fuckmenigga = ctx.message.author
-        if discord.utils.get(fuckmenigga.roles, name="Muted") != None:
-            return
         if user is None:
             user = ctx.author
 
@@ -60,9 +54,6 @@ class Discord_Info(commands.Cog):
     @commands.guild_only()
     async def server(self, ctx):
         """ Check info about current server """
-        fuckmenigga = ctx.message.author
-        if discord.utils.get(fuckmenigga.roles, name="Muted") != None:
-            return
         if ctx.invoked_subcommand is None:
             findbots = sum(1 for member in ctx.guild.members if member.bot)
 
@@ -81,9 +72,6 @@ class Discord_Info(commands.Cog):
     @commands.guild_only()
     async def server_avatar(self, ctx):
         """ Get the current server icon """
-        fuckmenigga = ctx.message.author
-        if discord.utils.get(fuckmenigga.roles, name="Muted") != None:
-            return
         await ctx.send(f"Avatar of **{ctx.guild.name}**\n{ctx.guild.icon_url_as(size=1024)}")
 
     @commands.command()
@@ -120,9 +108,6 @@ class Discord_Info(commands.Cog):
     @commands.guild_only()
     async def user(self, ctx, *, user: discord.Member = None):
         """ Get user information """
-        fuckmenigga = ctx.message.author
-        if discord.utils.get(fuckmenigga.roles, name="Muted") != None:
-            return
         if user is None:
             user = ctx.author
 
@@ -141,6 +126,103 @@ class Discord_Info(commands.Cog):
         )
 
         await ctx.send(content=f"ℹ About **{user.id}**", embed=embed)
+
+    @commands.command(aliases=['colour'])
+    @commands.cooldown(rate=1, per=3.0, type=commands.BucketType.user)
+    async def color(self, ctx, color: str):
+        """ fuck """
+
+        async with ctx.channel.typing():
+            if color == "random":
+                color = "%06x" % random.randint(0, 0xFFFFFF)
+
+            if color[:1] == "#":
+                color = color[1:]
+
+            if not re.search(r'^(?:[0-9a-fA-F]{3}){1,2}$', color):
+                return await ctx.send("You're only allowed to enter HEX (0-9 & A-F)")
+            cleaned = color.replace("#", "")
+            myunendinghate = int(cleaned, 16)
+            guild = ctx.guild
+            fuckk = str(color)
+            name = (f'#{fuckk}')
+            try:
+                try:
+                    rolel = []
+                    for role in ctx.author.roles:
+                        if "#" in role.name:
+                            rolel.append(role.id)
+                    roler = discord.Object(id=rolel[0])
+                    await ctx.author.remove_roles(roler)
+                except:
+                    pass
+                try:
+                    fuckk = f(color)
+                    therole = discord.utils.get(ctx.guild.roles, name=f"{name}") 
+                    await ctx.author.add_roles(therole)
+                    embed = discord.Embed(colour=discord.Colour(myunendinghate))
+                    embed.description = f"Role found! Success!"
+                    await ctx.send(embed=embed)
+                    await ctx.message.add_reaction(chr(0x2705))
+
+                except Exception as e:
+                    await guild.create_role(name=name, colour=discord.Colour(myunendinghate))
+                    therole = discord.utils.get(ctx.guild.roles, name=f"{name}") 
+                    await ctx.author.add_roles(therole)
+                    embed = discord.Embed(colour=discord.Colour(myunendinghate))
+                    embed.description = f"Role created! Success!"
+                    await ctx.send(embed=embed)
+                    await ctx.message.add_reaction(chr(0x2705))
+
+            except Exception as e:
+                    embed = discord.Embed(colour=discord.Colour(myunendinghate))
+                    embed.description = f"Role created! Please type command again"
+                    await ctx.send(embed=embed)
+                    await ctx.send(e)
+
+
+
+    @commands.command(hidden=True)
+    @commands.cooldown(rate=1, per=3.0, type=commands.BucketType.user)
+    async def deleteroles(self, ctx):
+        """ fuck """
+        guild = ctx.guild
+        await ctx.message.add_reaction(chr(0x2705))
+        for role in ctx.guild.roles:
+            if len(role.members) == 0:
+                if "#" in role.name:
+                    try:
+                        rolee = role.name
+                        cleaned = rolee.replace("#", "")
+                        myunendinghate = int(cleaned, 16)
+                        embed = discord.Embed(colour=discord.Colour(myunendinghate))
+                        embed.description = f"Automatically deleted the role **{role}** !"
+                        await ctx.send(embed=embed)
+                        await role.delete()
+                    except Exception as e:
+                        await ctx.send(e)
+        await ctx.send("Finished!")
+
+    @commands.command(hidden=True)
+    @commands.cooldown(rate=1, per=3.0, type=commands.BucketType.user)
+    async def unusedroles(self, ctx):
+        """ fuck """
+        guild = ctx.guild
+        await ctx.message.add_reaction(chr(0x2705))
+        for role in ctx.guild.roles:
+            if len(role.members) == 0:
+                if "#" in role.name:
+                    try:
+                        rolee = role.name
+                        cleaned = rolee.replace("#", "")
+                        myunendinghate = int(cleaned, 16)
+                        embed = discord.Embed(colour=discord.Colour(myunendinghate))
+                        embed.description = f"**{role}**"
+                        await ctx.send(embed=embed)
+                        #await role.delete()
+                    except Exception as e:
+                        await ctx.send(f'{e}')
+        await ctx.send("Finished!")
 
 
 def setup(bot):
