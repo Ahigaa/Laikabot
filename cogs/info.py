@@ -28,9 +28,6 @@ class Information(commands.Cog):
     @commands.guild_only()
     async def ping(self, ctx):
         """ Pong! """
-        fuckmenigga = ctx.message.author
-        if discord.utils.get(fuckmenigga.roles, name="Muted") != None:
-            return
         ans = random.choice(lists.ping)
         before = time.monotonic()
         message = await ctx.send("Pong")
@@ -41,9 +38,6 @@ class Information(commands.Cog):
     @commands.guild_only()
     async def about(self, ctx):
         """ About the bot """
-        fuckmenigga = ctx.message.author
-        if discord.utils.get(fuckmenigga.roles, name="Muted") != None:
-            return
         ramUsage = self.process.memory_full_info().rss / 1024**2
         avgmembers = round(len(self.bot.users) / len(self.bot.guilds))
         uptime = f_time(datetime.now() - self.bot.startup)
