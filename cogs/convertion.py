@@ -20,16 +20,6 @@ class Conversion(commands.Cog):
     @commands.Cog.listener()
     @commands.guild_only()
     async def on_message(self, message):
-        if message.author.bot:
-                return
-
-        if discord.utils.get(message.author.roles, name="Muted") != None:
-            await message.delete();
-            return
-        if discord.utils.get(message.author.roles, name="Hardmute") != None:
-            await message.delete();
-            return
-
         async def convertingshit():
             if "http" in message.content:
                 return
