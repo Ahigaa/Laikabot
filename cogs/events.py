@@ -39,17 +39,6 @@ class Events(commands.Cog):
         self.config = default.get("config.json")
         self.process = psutil.Process(os.getpid())
 
-    def bot_check_once(self, ctx):
-        blacklist = default.get("config.json").blacklist
-        if ctx.author.id in blacklist:
-            raise Blacklisted()
-        else:
-            return True
-
-    async def on_command_error(self, ctx, error):
-        if isinstance(error, Blacklisted):
-            await ctx.send("You cannot use this command.")
-
     @commands.Cog.listener()
     @commands.guild_only()
     async def on_guild_join(self, guild):
