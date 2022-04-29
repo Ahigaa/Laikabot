@@ -95,11 +95,6 @@ class Activity(commands.Cog):
 		print(f"Connected")
 
 
-		if discord.utils.get(message.author.roles, name="Muted") != None:
-			return
-		if discord.utils.get(message.author.roles, name="Hardmute") != None:
-			return
-
 		author_id = str(message.author.id)
 		guild_id = str(message.guild.id)
 
@@ -233,22 +228,6 @@ class Activity(commands.Cog):
 
 				await channell.send(testimonial.sentiment)
 				
-				#if sentiment_dict['compound'] >= 0.05: 
-				#	await channell.send("Positive") 
-				#	sql = ("UPDATE fucku SET Credit=? WHERE UserID=? AND GuildID=?")
-				#	val = (int(user[4] + 1), int(message.author.id), int(message.guild.id))
-				#	self.db_cursor.execute(sql, val)
-				#	self.db.commit()
-				#	#await(await message.channel.send(f'{message.author} 伴侶 ! *[+1]* ')).delete(delay=3)
-				#elif sentiment_dict['compound'] <= - 0.05: 
-				#	await channell.send("Negative") 
-				#	sql = ("UPDATE fucku SET Credit=? WHERE UserID=? AND GuildID=?")
-				#	val = (int(user[4] - 1), int(message.author.id), int(message.guild.id))
-				#	self.db_cursor.execute(sql, val)
-				#	self.db.commit()
-				#	#await(await message.channel.send(f'{message.author} 坏公民! *[-1]* 个社会信用')).delete(delay=3)
-				#else: 
-				#	await channell.send("Neutral") 
 
 
 			for b in hebrw:
@@ -525,9 +504,6 @@ class Activity(commands.Cog):
 		db_path = f"{self.config.database2}"
 		self.db = sqlite3.connect(db_path)
 		self.db_cursor = self.db.cursor()
-		fuckmenigga = ctx.message.author
-		if discord.utils.get(fuckmenigga.roles, name="Muted") != None:
-			return
 		if not member:
 			member = ctx.author
 		else:
@@ -552,6 +528,38 @@ class Activity(commands.Cog):
 		else:
 			return
 
+	@commands.cooldown(1, 3, commands.BucketType.user)
+	@commands.command(aliases=["remove"], hidden=True)
+	@permissions.has_permissions(kick_members=True)
+	async def subtract (self, ctx, member: discord.Member = None, *, amount: int = None):
+		""" Remove credit """
+		db_path = f"{self.config.database2}"
+		self.db = sqlite3.connect(db_path)
+		self.db_cursor = self.db.cursor()
+		if not member:
+			member = ctx.author
+		else:
+			member = member
+		member_id = str(member.id)
+		guild_id = str(ctx.guild.id)
+
+		self.db_cursor.execute(f"SELECT * FROM fucku WHERE UserID='{member_id}' AND GuildID='{guild_id}'")
+		user = self.db_cursor.fetchone()
+
+		if user:
+			print("User foundddd")
+			sql = ("UPDATE fucku SET Credit=? WHERE UserID=? AND GuildID=?")
+			val = (int(user[4] - amount), int(member_id), int(guild_id))
+			self.db_cursor.execute(sql, val)
+			self.db.commit()
+			await ctx.message.add_reaction(chr(0x2705))
+			print(f"removed {amount}")
+			try:
+				self.db_cursor.close()
+			except Exception as e:
+				return
+		else:
+			return
 
 	@commands.cooldown(1, 3, commands.BucketType.user)
 	@commands.command()
@@ -560,9 +568,6 @@ class Activity(commands.Cog):
 		db_path = f"{self.config.database2}"
 		self.db = sqlite3.connect(db_path)
 		self.db_cursor = self.db.cursor()
-		fuckmenigga = ctx.message.author
-		if discord.utils.get(fuckmenigga.roles, name="Muted") != None:
-			return
 		if not member:
 			member = ctx.author
 		else:
@@ -589,7 +594,6 @@ class Activity(commands.Cog):
 			except Exception as e:
 				return
 
-
 	@commands.cooldown(1, 3, commands.BucketType.user)
 	@commands.command()
 	async def nigger(self, ctx):
@@ -597,9 +601,6 @@ class Activity(commands.Cog):
 		db_path = f"{self.config.database2}"
 		self.db = sqlite3.connect(db_path)
 		self.db_cursor = self.db.cursor()
-		fuckmenigga = ctx.message.author
-		if discord.utils.get(fuckmenigga.roles, name="Muted") != None:
-			return
 		self.db_cursor.execute(f"SELECT * FROM fucku ORDER BY Nword DESC")
 		user = self.db_cursor.fetchall()
 		i = 1
@@ -620,57 +621,6 @@ class Activity(commands.Cog):
 			return
 
 
-	@commands.cooldown(1, 3, commands.BucketType.user)
-	@commands.command()
-	async def give (self, ctx, member: discord.Member = None, *, amount: int):
-		""" Give CC """
-		fuckmenigga = ctx.message.author
-		if discord.utils.get(fuckmenigga.roles, name="Muted") != None:
-			return
-		if not member:
-			member = ctx.author
-		if member == ctx.author:
-			return
-		else:
-			member = member
-		if "-" in ctx.message.content:
-			return
-		member_id = str(member.id)
-		guild_id = str(ctx.guild.id)
-
-		db_path = f"{self.config.database2}"
-		self.db = sqlite3.connect(db_path)
-		self.db_cursor = self.db.cursor()
-
-		self.db_cursor.execute(f"SELECT * FROM fucku WHERE UserID='{ctx.author.id}' AND GuildID='{guild_id}'")
-		user = self.db_cursor.fetchone()
-
-		if user:
-			print("User foundddd")
-			if amount > int(user[7]):
-				return
-			sql = ("UPDATE fucku SET balance=? WHERE UserID=? AND GuildID=?")
-			val = (int(user[7] - amount), int(ctx.author.id), int(guild_id))
-			self.db_cursor.execute(sql, val)
-			self.db.commit()
-
-			self.db = sqlite3.connect(db_path)
-			self.db_cursor = self.db.cursor()
-			self.db_cursor.execute(f"SELECT * FROM fucku WHERE UserID='{member_id}' AND GuildID='{guild_id}'")
-			user = self.db_cursor.fetchone()
-
-			sqll = ("UPDATE fucku SET balance=? WHERE UserID=? AND GuildID=?")
-			vall = (int(user[7] + amount), int(member_id), int(guild_id))
-			self.db_cursor.execute(sqll, vall)
-			self.db.commit()
-			await ctx.message.add_reaction(chr(0x2705))
-			print(f"removed {amount}")
-			try:
-				self.db_cursor.close()
-			except Exception as e:
-				return
-		else:
-			return
 
 	@commands.cooldown(1, 10, commands.BucketType.user)
 	@commands.command(aliases=['credit'])
@@ -679,9 +629,6 @@ class Activity(commands.Cog):
 		db_path = f"{self.config.database2}"
 		self.db = sqlite3.connect(db_path)
 		self.db_cursor = self.db.cursor()
-		fuckmenigga = ctx.message.author
-		if discord.utils.get(fuckmenigga.roles, name="Muted") != None:
-			return
 		if not member:
 			member = ctx.author
 		else:
@@ -756,9 +703,9 @@ class Activity(commands.Cog):
 					pfpc = pfpc.resize((new_width, new_height), Image.ANTIALIAS);
 	
 				draw = ImageDraw.Draw(img)
-				font = ImageFont.truetype('/home/ahigaaa/Laikabotfuck/cogs/Modern_Sans_Light.otf', 20) 
-				font2 = ImageFont.truetype('/home/ahigaaa/Laikabotfuck/cogs/Modern_Sans_Light.otf', 30) 
-				font3 = ImageFont.truetype('/home/ahigaaa/Laikabotfuck/cogs/Modern_Sans_Light.otf', 15) 
+				font = ImageFont.truetype('Modern_Sans_Light.otf', 20) 
+				font2 = ImageFont.truetype('Modern_Sans_Light.otf', 30) 
+				font3 = ImageFont.truetype('Modern_Sans_Light.otf', 15) 
 				draw.text((10, 10), "Credit Score:", (255, 255, 255), font=font)
 				if currentcredit >= 1029:
 					draw.text((10, 70), ":D", (255, 255, 255), font=font) 
@@ -797,9 +744,9 @@ class Activity(commands.Cog):
 					#await ctx.send(f"You probably didn't set your username on the website!")
 				except Exception as e:
 					return
-				img.save('/home/ahigaaa/Laikabotfuck/cogs/profile/infoimg2.png') 
-			with open('/home/ahigaaa/Laikabotfuck/cogs/profile/infoimg2.png', 'rb') as fp:
-				await(await ctx.send(file=discord.File(fp, "penis.png"))).delete(delay=10)
+				img.save('profile/infoimg2.png') 
+			with open('profile/infoimg2.png', 'rb') as fp:
+				await(await ctx.send(file=discord.File(fp, "penis.png"))).delete(delay=45)
 			try:
 				self.db_cursor.close()
 			except Exception as e:
