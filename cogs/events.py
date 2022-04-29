@@ -83,44 +83,8 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     @commands.guild_only()
     async def on_message(self, message):
-        if ". irid" in message.content:
+        if ".irid" in message.content or ". irid" in message.content:
             await message.delete()
-    @commands.Cog.listener()
-    @commands.guild_only()
-    async def on_message(self, message):
-        if ".irid" in message.content:
-            await message.delete()
-
-    @commands.Cog.listener()
-    @commands.guild_only()
-    async def on_message(self, message):
-        user = message.author
-        channelid = message.channel.name
-        if channelid == "verification":
-            if discord.utils.get(user.roles, name="Heimdallar") != None:
-                return
-            elif "@" in message.content:
-                return
-            else:
-                await message.delete()
-        elif discord.utils.get(user.roles, name="Muted") != None:
-            await message.delete()
-
-
-    #Message logger for backup server (general)
-    @commands.Cog.listener()
-    @commands.guild_only()
-    async def on_message(self, message):
-        if "irid" in message.content:
-            return
-        user = message.author
-        async with aiohttp.ClientSession() as session:
-            webhook = Webhook.from_url('Webhook goes here', adapter=AsyncWebhookAdapter(session))
-            username = message.author.display_name
-            pfp = message.author.avatar_url_as(size=1024)
-            await webhook.send(f'{message.content}', username=str(username), avatar_url=str(pfp))
-
-
 
     @commands.Cog.listener()
     @commands.guild_only()
